@@ -65,6 +65,13 @@ footer {
     text-align: center;
 }
 
+.footer_detail {
+    column-count: 1;
+    /* column-gap: 50px; */
+    text-align: center;
+    align-items: center;
+}
+
 form {
     max-width: 400px;
     margin: 0 auto;
