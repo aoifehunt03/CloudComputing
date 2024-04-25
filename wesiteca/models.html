@@ -42,26 +42,28 @@ page desc: year 2 sem 4 aws cloud project simple website to enter the cloud-->
 
 
 
-        
+
     <script>
-        // Fetch data from API Gateway endpoint
-        fetch('arn:aws:apigateway:eu-west-1::/apis/ysetme4qp6/routes/dz7k75b') // <---- place the API Endpoint here
-            .then(response => response.json())
-            .then(data => {
-                const tableDataElement = document.getElementById('tableData');
-                // Display data in HTML
-                data.forEach(item => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.textContent = JSON.stringify(item);
-                    tableDataElement.appendChild(itemDiv);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-                const errorElement = document.createElement('div');
-                errorElement.textContent = 'Error fetching data';
-                tableDataElement.appendChild(errorElement);
-            });
+        async function fetchData() {
+            const apiUrl = 'https://3h3bav64n2.execute-api.eu-west-1.amazonaws.com://p2f7fy1mp4.execute-api.eu-west-1.amazonaws.com/Prod/scan';  // <--- replacing with our own
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('text/html')) {
+                    throw new Error("Not an HTML response!");
+                }
+                const data = await response.text();
+                document.getElementById('dataDisplay').innerHTML = data;
+            } catch (error) {
+                console.error('Fetch error: ', error);
+                document.getElementById('dataDisplay').textContent = 'Error loading data.';
+            }
+        }
+
+        fetchData();
     </script>
 
 
