@@ -37,10 +37,17 @@ nav ul li a {
 
 /* Footer styles */
 footer {
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
     text-align: center;
-    padding: 20px 0;
     background-color: #333;
     color: #fff;
+    /* column-gap: 50px; */
+    flex-shrink: 0; /* Prevents the footer from shrinking */
+    margin-top: auto; /* Pushes the footer to the bottom */
 }
 
 /* Portfolio gallery styles */
@@ -63,13 +70,6 @@ footer {
 .contact-form {
     padding: 50px;
     text-align: center;
-}
-
-.footer_detail {
-    column-count: 1;
-    /* column-gap: 50px; */
-    text-align: center;
-    align-items: center;
 }
 
 form {
