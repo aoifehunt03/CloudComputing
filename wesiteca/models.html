@@ -29,23 +29,13 @@ page desc: year 2 sem 4 aws cloud project simple website to enter the cloud-->
 
     <section class="portfolio-gallery">
         <h2>Headshots</h2>
-        <!-- <div class="gallery-item">
-            <img src="placeholder-image.jpg" alt="Portfolio Image">
-            <p>Photo description or title</p>
-        </div>
-        <div class="gallery-item">
-            <img src="placeholder-image.jpg" alt="Portfolio Image">
-            <p>Photo description or title</p>
-        </div> -->
-
-        <div id="tableData"></div>
-
-
-
+        <!-- Placeholder for the fetched HTML content -->
+        <div id="dataDisplay"></div> <!-- Corrected ID used in the script -->
+    </section>
 
     <script>
         async function fetchData() {
-            const apiUrl = 'https://3h3bav64n2.execute-api.eu-west-1.amazonaws.com/Prod/scan';  // <--- replacing with our own
+            const apiUrl = 'https://3h3bav64n2.execute-api.eu-west-1.amazonaws.com/Prod/scan'; // URL to your API
             try {
                 const response = await fetch(apiUrl);
                 if (!response.ok) {
