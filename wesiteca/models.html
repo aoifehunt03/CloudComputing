@@ -31,8 +31,8 @@ page desc: year 2 sem 4 aws cloud project simple website to enter the cloud-->
         <h2>Headshots</h2>
         <!-- Placeholder for the fetched HTML content -->
         <div id="dataDisplay"></div> <!-- Corrected ID used in the script -->
-    </section>
 
+        <!-- this will display the table scan -->
     <script>
         async function fetchData() {
             const apiUrl = 'https://3h3bav64n2.execute-api.eu-west-1.amazonaws.com/Prod/scan'; // URL to your API
@@ -95,10 +95,26 @@ page desc: year 2 sem 4 aws cloud project simple website to enter the cloud-->
                 document.getElementById('dataDisplay').textContent = 'Error loading data: ' + error.message;
             }
         }
-    
+
         fetchData();
-    </script>
-                                                        
+          </script>
+
+        </section>
+                  
+        
+        <section class="portfolio-gallery">
+            <h2>Models</h2>
+            <!-- this will display the model scan -->
+            <!-- Placeholder for the fetched HTML content -->
+            <div id="dataDisplay"></div> <!-- Corrected ID used in the script -->
+
+
+
+
+
+            </section>
+    
+    
 
     <footer>            
         <section>
