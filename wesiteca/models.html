@@ -42,22 +42,62 @@ page desc: year 2 sem 4 aws cloud project simple website to enter the cloud-->
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('text/html')) {
-                    throw new Error("Not an HTML response!");
+                if (!contentType) {
+                    throw new Error("Response content type not found");
                 }
-                const data = await response.text();
-                document.getElementById('dataDisplay').innerHTML = data;
+                
+                if (contentType.includes('application/json')) {
+                    const data = await response.json();
+                    // Construct the table with separate columns
+                    let tableHtml = '<table border="1">';
+                    // Create table headers
+                    tableHtml += '<tr>';
+                    tableHtml += '<th>Stage Name</th>'; // Add the Stage Name as the first column
+                    for (const key in data[0]) {
+                        tableHtml += `<th>${key}</th>`;
+                    }
+                    tableHtml += '</tr>';
+                    // Create table rows
+                    data.forEach(item => {
+                        tableHtml += '<tr>';
+                        tableHtml += `<td>${item['StageName']}</td>`; // Display Stage Name in the first column
+                        for (const key in item) {
+                            tableHtml += `<td>${item[key]}</td>`;
+                        }
+                        tableHtml += '</tr>';
+                    });
+                    tableHtml += '</table>';
+                    document.getElementById('dataDisplay').innerHTML = tableHtml;
+                } else if (contentType.includes('text/html')) {
+                    const data = await response.text();
+                    // Parse the HTML response
+                    const parser = new DOMParser();
+                    const htmlDoc = parser.parseFromString(data, 'text/html');
+                    const items = htmlDoc.querySelectorAll('tbody tr');
+                    // Construct the table with separate columns
+                    let tableHtml = '<table border="1">';
+                    items.forEach(item => {
+                        const columns = item.querySelectorAll('td');
+                        tableHtml += '<tr>';
+                        columns.forEach(column => {
+                            tableHtml += `<td>${column.textContent}</td>`;
+                        });
+                        tableHtml += '</tr>';
+                    });
+                    tableHtml += '</table>';
+                    document.getElementById('dataDisplay').innerHTML = tableHtml;
+                } else {
+                    throw new Error("Unsupported response format");
+                }
             } catch (error) {
                 console.error('Fetch error: ', error);
-                document.getElementById('dataDisplay').textContent = 'Error loading data.';
+                document.getElementById('dataDisplay').textContent = 'Error loading data: ' + error.message;
             }
         }
-
+    
         fetchData();
     </script>
-
-
-    </section>
+                                                        
 
     <footer>            
         <section>
@@ -65,6 +105,7 @@ page desc: year 2 sem 4 aws cloud project simple website to enter the cloud-->
             <small>Copyright&copy; 2024 </small>
         </p>
         </section>
-    <footer>
+    </footer>
+
 </body>
 </html>
