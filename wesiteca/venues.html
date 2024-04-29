@@ -33,9 +33,9 @@ page desc: year 2 sem 4 aws cloud project simple website to enter the cloud-->
 
 
 
-        <!-- <script>
+        <script>
             async function fetchData() {
-                const apiUrl = 'https://3h3bav64n2.execute-api.eu-west-1.amazonaws.com/Prod/scan'; // URL to your API
+                const apiUrl = 'https://zkq0mxjbh9.execute-api.eu-west-1.amazonaws.com/Prod/VenuesScan'; // URL to your API
                 try {
                     const response = await fetch(apiUrl);
                     if (!response.ok) {
@@ -45,7 +45,7 @@ page desc: year 2 sem 4 aws cloud project simple website to enter the cloud-->
                     if (!contentType) {
                         throw new Error("Response content type not found");
                     }
-                    
+
 
                     if (contentType.includes('application/json')) {
                         const data = await response.json();
@@ -53,44 +53,58 @@ page desc: year 2 sem 4 aws cloud project simple website to enter the cloud-->
                         let tableHtml = '<table border="1">';
                         // Create table headers
                         tableHtml += '<tr>';
-                        tableHtml += '<th>Stage Name</th>'; // Add the Stage Name as the first column
+                        tableHtml += '<th>Venue Name</th>'; // Add the Stage Name as the first column
                         for (const key in data[0]) {
                             tableHtml += `<th>${key}</th>`;
                         }
                         tableHtml += '</tr>';
-    
-
 
                         // Create table rows
                         data.forEach(item => {
                             tableHtml += '<tr>';
-                            tableHtml += `<td>${item['StageName']}</td>`; // Display Stage Name in the first column
+                            tableHtml += `<td>${item['VenuesName']}</td>`; // Display Venue Name in the first column
                             for (const key in item) {
                                 tableHtml += `<td>${item[key]}</td>`;
                             }
                             tableHtml += '</tr>';
                         });
+
                         tableHtml += '</table>';
                         document.getElementById('dataDisplay').innerHTML = tableHtml;
-                    } else if (contentType.includes('text/html')) {
+                    }
+
+
+                    // I am going to use here split.Parse to see if i can split the data into different columns
+                    // going big brain mode heheheheh - aoife
+                    else if (contentType.includes('text/html')) {
                         const data = await response.text();
-                        // Parse the HTML response
-                        const parser = new DOMParser();
-                        const htmlDoc = parser.parseFromString(data, 'text/html');
-                        const items = htmlDoc.querySelectorAll('tbody tr');
+                        // Split the HTML response into rows
+                        let rows = data.split(':'); // Split the data into rows using ':'
+                        // Assuming each row is separated by the semicolon character that was giving me attitude >:(
+
+                        for (let i = 0; i < rows.length; i++) {
+                            rows[i] = rows[i].replace(/"|{|}/g, ''); // Replace double quotes and curly brackets in each row
+                        }
+
+
+                        // need to figure out how to remove the "undefined" part in the actual website 
+
+
                         // Construct the table with separate columns
-                        let tableHtml = '<table border="1">';
-                        items.forEach(item => {
-                            const columns = item.querySelectorAll('td');
+                        let tableHtml = '<table border="3">';
+                        rows.forEach(row => {
+                            // Split each row into columns
+                            const columns = row.split(',');
                             tableHtml += '<tr>';
                             columns.forEach(column => {
-                                tableHtml += `<td>${column.textContent}</td>`;
+                                tableHtml += `<td>${column}</td>`;
                             });
                             tableHtml += '</tr>';
                         });
                         tableHtml += '</table>';
                         document.getElementById('dataDisplay').innerHTML = tableHtml;
-                    } else {
+                    }
+                    else {
                         throw new Error("Unsupported response format");
                     }
                 } catch (error) {
@@ -98,9 +112,9 @@ page desc: year 2 sem 4 aws cloud project simple website to enter the cloud-->
                     document.getElementById('dataDisplay').textContent = 'Error loading data: ' + error.message;
                 }
             }
-    
+
             fetchData();
-              </script> -->
+        </script>
 
     
     <footer>            

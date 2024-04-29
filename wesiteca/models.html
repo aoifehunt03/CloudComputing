@@ -7,13 +7,14 @@ page desc: year 2 sem 4 aws cloud project simple website to enter the cloud-->
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" >
+    <meta charset="utf-8">
     <meta name="description" content="project website">
     <meta name="keywords" content="models, portfolio, brands, venues, photography, job search, modelling">
     <meta name="author" content="Aoife Hunt">
     <title>Portfolio | Modeling</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <header>
         <nav>
@@ -27,114 +28,155 @@ page desc: year 2 sem 4 aws cloud project simple website to enter the cloud-->
         </nav>
     </header>
 
+    <section style="text-align: center;">
+        <p style="color: pink; background-color: #333333;"> 
+    
+            ❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。
+        </p>
+    </section>
+
     <section class="portfolio-gallery">
-        <h2>Headshots</h2>
+        <!-- <h2>Headshots</h2> -->
         <!-- Placeholder for the fetched HTML content -->
         <div id="dataDisplay"></div> <!-- Corrected ID used in the script -->
 
         <!-- this will display the table scan -->
-        
+
         <script>
-        async function fetchData() {
-            const apiUrl = 'https://3h3bav64n2.execute-api.eu-west-1.amazonaws.com/Prod/scan'; // URL to your API
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const contentType = response.headers.get('content-type');
-                if (!contentType) {
-                    throw new Error("Response content type not found");
-                }
-                
-
-
-
-                if (contentType.includes('application/json')) {
-                    const data = await response.json();
-                    // Construct the table with separate columns
-                    let tableHtml = '<table border="1">';
-                    // Create table headers
-                    tableHtml += '<tr>';
-                    tableHtml += '<th>Stage Name</th>'; // Add the Stage Name as the first column
-                    for (const key in data[0]) {
-                        tableHtml += `<th>${key}</th>`;
+            async function fetchData() {
+                const apiUrl = 'https://3h3bav64n2.execute-api.eu-west-1.amazonaws.com/Prod/scan'; // URL to your API
+                try {
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                    tableHtml += '</tr>';
+                    const contentType = response.headers.get('content-type');
+                    if (!contentType) {
+                        throw new Error("Response content type not found");
+                    }
 
-
-
-
-
-                    // Create table rows
-                    data.forEach(item => {
+                    if (contentType.includes('application/json')) {
+                        const data = await response.json();
+                        // Construct the table with separate columns
+                        let tableHtml = '<table border="1">';
+                        // Create table headers
                         tableHtml += '<tr>';
-                        tableHtml += `<td>${item['StageName']}</td>`; // Display Stage Name in the first column
-                        for (const key in item) {
-                            tableHtml += `<td>${item[key]}</td>`;
+                        tableHtml += '<th>Stage Name</th>'; // Add the Stage Name as the first column
+                        for (const key in data[0]) {
+                            tableHtml += `<th>${key}</th>`;
                         }
                         tableHtml += '</tr>';
-                    });
 
-
-
-
-                    tableHtml += '</table>';
-                    document.getElementById('dataDisplay').innerHTML = tableHtml;
-                } else if (contentType.includes('text/html')) {
-                    const data = await response.text();
-                    // Parse the HTML response
-                    const parser = new DOMParser();
-                    const htmlDoc = parser.parseFromString(data, 'text/html');
-                    const items = htmlDoc.querySelectorAll('tbody tr');
-                    // Construct the table with separate columns
-                    let tableHtml = '<table border="1">';
-                    items.forEach(item => {
-                        const columns = item.querySelectorAll('td');
-                        tableHtml += '<tr>';
-                        columns.forEach(column => {
-                            tableHtml += `<td>${column.textContent}</td>`;
+                        // Create table rows
+                        data.forEach(item => {
+                            tableHtml += '<tr>';
+                            tableHtml += `<td>${item['StageName']}</td>`; // Display Stage Name in the first column
+                            for (const key in item) {
+                                tableHtml += `<td>${item[key]}</td>`;
+                            }
+                            tableHtml += '</tr>';
                         });
-                        tableHtml += '</tr>';
-                    });
-                    tableHtml += '</table>';
-                    document.getElementById('dataDisplay').innerHTML = tableHtml;
-                } else {
-                    throw new Error("Unsupported response format");
+
+                        tableHtml += '</table>';
+                        document.getElementById('dataDisplay').innerHTML = tableHtml;
+                    }
+
+
+                    // I am going to use here split.Parse to see if i can split the data into different columns
+                    // going big brain mode heheheheh - aoife
+                    else if (contentType.includes('text/html')) {
+                        const data = await response.text();
+                        // Split the HTML response into rows
+                        let rows = data.split(':'); // Split the data into rows using ':'
+                        // Assuming each row is separated by the semicolon character that was giving me attitude >:(
+
+                        for (let i = 0; i < rows.length; i++) {
+                            rows[i] = rows[i].replace(/"|{|}/g, ''); // Replace double quotes and curly brackets in each row
+                        }
+
+
+                        // need to figure out how to remove the "undefined" part in the actual website 
+
+
+                        // Construct the table with separate columns
+                        let tableHtml = '<table border="3">';
+                        rows.forEach(row => {
+                            // Split each row into columns
+                            const columns = row.split(',');
+                            tableHtml += '<tr>';
+                            columns.forEach(column => {
+                                tableHtml += `<td>${column}</td>`;
+                            });
+                            tableHtml += '</tr>';
+                        });
+                        tableHtml += '</table>';
+                        document.getElementById('dataDisplay').innerHTML = tableHtml;
+                    }
+                    else {
+                        throw new Error("Unsupported response format");
+                    }
+                } catch (error) {
+                    console.error('Fetch error: ', error);
+                    document.getElementById('dataDisplay').textContent = 'Error loading data: ' + error.message;
                 }
-            } catch (error) {
-                console.error('Fetch error: ', error);
-                document.getElementById('dataDisplay').textContent = 'Error loading data: ' + error.message;
             }
-        }
 
-        fetchData();
-          </script>
+            fetchData();
+        </script>
 
-        </section>
-                  
-        
-        <section class="portfolio-gallery">
-            <h2>Models</h2>
-            <!-- this will display the model scan -->
-            <!-- Placeholder for the fetched HTML content -->
-            <div id="dataDisplay"></div> <!-- Corrected ID used in the script -->
+<section style="text-align: center;">
+    <p style="color: white; background-color: #333333;"> 
+
+        ❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。❀。• *₊°。 ❀°。
+    </p>
+</section>
 
 
+<section>
+    <section class="portfolio-gallery">
+        <h2>Models</h2>
+        <!-- this will display the model scan -->
+        <!-- Placeholder for the fetched HTML content -->
+        <!-- this ain't working lol but c'est la vie et la vie est trés belle en ce moment mon reuf -->
+        <div id="dataDisplay">
+
+            <script>
+                document.getElementById('loadDataBtn').addEventListener('click', function () {
+                    const operation = document.getElementById('operationSelect').value;
+                    const url = `https://3h3bav64n2.execute-api.eu-west-1.amazonaws.com/Prod/modelQuery/opquery?operation=${operation}`;
+
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            const tableBody = document.getElementById('Models').getElementsByTagName('tbody')[0];
+                            tableBody.innerHTML = ''; // Clear existing rows
+                            data.forEach(item => {
+                                const row = tableBody.insertRow();
+                                const cellDateTime = row.insertCell(0);
+                                const cellOperation = row.insertCell(1);
+                                const cellOther = row.insertCell(2);
+                                cellDateTime.textContent = item.DateTime;
+                                cellOperation.textContent = item.Operation;
+                                cellOther.textContent = JSON.stringify(item, null, 2); // Adjust as needed
+                            });
+                        })
+                        .catch(error => console.error('Error loading data:', error));
+                });
+            </script>
+
+        </div> <!-- Corrected ID used in the script -->
+
+    </section>
 
 
-
-            </section>
-    
-    
-
-    <footer>            
+    <footer>
         <section>
-        <p>
-            <small>Copyright&copy; 2024 </small>
-        </p>
+            <p>
+                <small>Copyright&copy; 2024 </small>
+            </p>
         </section>
     </footer>
 
 </body>
+
 </html>
